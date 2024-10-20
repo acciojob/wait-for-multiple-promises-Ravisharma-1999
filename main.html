@@ -1,33 +1,86 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promises and Timing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-  </head>
-
-  <body>
-    <!-- the entire body must be written by student -->
-    <table class="table table-striped table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>Promise Name</th>
-          <th>Time taken (s)</th>
-        </tr>
-      </thead>
-      <tbody id="output"></tbody>
+    <h1>Promise Timing Example</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Promise</th>
+                <th>Time (seconds)</th>
+            </tr>
+        </thead>
+        <tbody id="resultTable">
+            <tr>
+                <td colspan="2">Loading...</td>
+            </tr>
+        </tbody>
     </table>
 
-    <script type="text/javascript" src="./script.js"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    <script>
+        // Function to create a promise that resolves after a random time
+        function createPromise(promiseNumber) {
+            return new Promise((resolve) => {
+                const time = Math.random() * 2 + 1; // Random time between 1 and 3 seconds
+                setTimeout(() => {
+                    resolve({ promiseNumber, time: time.toFixed(3) });
+                }, time * 1000);
+            });
+        }
+
+        // Create an array of promises
+        const promises = [
+            createPromise(1),
+            createPromise(2),
+            createPromise(3),
+        ];
+
+        // Handle the promises with Promise.all
+        Promise.all(promises)
+            .then((results) => {
+                // Remove the loading text
+                const resultTable = document.getElementById('resultTable');
+                resultTable.innerHTML = '';
+
+                let totalTime = 0;
+
+                // Populate the table with results
+                results.forEach(result => {
+                    totalTime += parseFloat(result.time);
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>Promise ${result.promiseNumber}</td><td>${result.time}</td>`;
+                    resultTable.appendChild(row);
+                });
+
+                // Add total row
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `<td>Total</td><td>${totalTime.toFixed(3)}</td>`;
+                resultTable.appendChild(totalRow);
+            });
+    </script>
+
+</body>
 </html>
