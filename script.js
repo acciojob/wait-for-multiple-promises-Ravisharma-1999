@@ -9,6 +9,12 @@ function createRandomPromise(promiseNumber) {
 // Reference to the table body
 const tableBody = document.getElementById("output");
 
+// Add loading row initially
+const loadingRow = document.createElement("tr");
+loadingRow.setAttribute("id", "loading");
+loadingRow.innerHTML = `<td colspan="2">Loading...</td>`;
+tableBody.appendChild(loadingRow);
+
 // Create an array of 3 promises
 const promises = [
     createRandomPromise(1),
