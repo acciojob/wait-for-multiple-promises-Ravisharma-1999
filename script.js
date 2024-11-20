@@ -7,12 +7,7 @@ function createRandomPromise(promiseNumber) {
 }
 
 // Reference to the table body
-const tableBody = document.getElementById("resultTable");
-
-// Add the default "Loading..." row
-const loadingRow = document.createElement("tr");
-loadingRow.innerHTML = `<td colspan="2">Loading...</td>`;
-tableBody.appendChild(loadingRow);
+const tableBody = document.getElementById("output");
 
 // Create an array of 3 promises
 const promises = [
@@ -24,7 +19,10 @@ const promises = [
 // Wait for all promises to resolve using Promise.all
 Promise.all(promises).then((results) => {
     // Remove the "Loading..." row
-    tableBody.innerHTML = "";
+    const loadingRow = document.getElementById("loading");
+    if (loadingRow) {
+        loadingRow.remove();
+    }
 
     let totalTime = 0;
 
