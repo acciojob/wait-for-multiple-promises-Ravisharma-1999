@@ -1,47 +1,47 @@
-// Function to create a promise that resolves after a random time between 1 and 3 seconds
-function createRandomPromise(promiseNumber) {
-    return new Promise((resolve) => {
-        const time = (Math.random() * 2 + 1).toFixed(3); // Random time between 1 and 3 seconds
-        setTimeout(() => resolve({ promiseNumber, time: parseFloat(time) }), time * 1000);
+// Function to simulate random delay (1 to 3 seconds)
+function createRandomPromise() {
+    const randomDelay = Math.floor(Math.random() * 3) + 1; // Random time between 1 and 3 seconds
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(randomDelay); // Resolve with the time taken in seconds
+        }, randomDelay * 1000);
     });
 }
 
-// Reference to the table body
-const tableBody = document.getElementById("output");
+// Create 3 promises
+const promise1 = createRandomPromise();
+const promise2 = createRandomPromise();
+const promise3 = createRandomPromise();
 
-// Add loading row initially
-const loadingRow = document.createElement("tr");
-loadingRow.setAttribute("id", "loading");
-loadingRow.innerHTML = `<td colspan="2">Loading...</td>`;
-tableBody.appendChild(loadingRow);
+// Use Promise.all to wait for all promises to resolve
+Promise.all([promise1, promise2, promise3]).then(results => {
+    // Remove the loading row
+    const loadingRow = document.getElementById('loadingRow');
+    loadingRow.style.display = 'none';
 
-// Create an array of 3 promises
-const promises = [
-    createRandomPromise(1),
-    createRandomPromise(2),
-    createRandomPromise(3),
-];
-
-// Wait for all promises to resolve using Promise.all
-Promise.all(promises).then((results) => {
-    // Remove the "Loading..." row
-    const loadingRow = document.getElementById("loading");
-    if (loadingRow) {
-        loadingRow.remove();
-    }
-
-    let totalTime = 0;
+    // Calculate total time taken for all promises to resolve
+    const totalTime = results.reduce((acc, time) => acc + time, 0);
 
     // Populate the table with the results
-    results.forEach((result) => {
-        totalTime += result.time;
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>Promise ${result.promiseNumber}</td><td>${result.time.toFixed(3)}</td>`;
-        tableBody.appendChild(row);
-    });
+    const tableBody = document.querySelector('tbody');
 
-    // Add the total row
-    const totalRow = document.createElement("tr");
-    totalRow.innerHTML = `<td>Total</td><td>${totalTime.toFixed(3)}</td>`;
-    tableBody.appendChild(totalRow);
+    // Row for Promise 1
+    const row1 = document.createElement('tr');
+    row1.innerHTML = `<td>Promise 1</td><td>${results[0]}</td>`;
+    tableBody.appendChild(row1);
+
+    // Row for Promise 2
+    const row2 = document.createElement('tr');
+    row2.innerHTML = `<td>Promise 2</td><td>${results[1]}</td>`;
+    tableBody.appendChild(row2);
+
+    // Row for Promise 3
+    const row3 = document.createElement('tr');
+    row3.innerHTML = `<td>Promise 3</td><td>${results[2]}</td>`;
+    tableBody.appendChild(row3);
+
+    // Row for Total time
+    const row4 = document.createElement('tr');
+    row4.innerHTML = `<td>Total</td><td>${totalTime.toFixed(3)}</td>`;
+    tableBody.appendChild(row4);
 });
