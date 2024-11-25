@@ -23,7 +23,7 @@ Promise.all([promise1, promise2, promise3]).then(results => {
     const totalTime = results.reduce((acc, time) => acc + time, 0);
 
     // Populate the table with the results
-    const tableBody = document.querySelector('tbody');
+    const tableBody = document.getElementById('output');
 
     // Row for Promise 1
     const row1 = document.createElement('tr');
